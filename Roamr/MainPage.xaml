@@ -67,21 +67,28 @@
             <Button Content="Shop around"
                     Click="Button_Click"
                     Name="Butn1"/>
-            <Button Name="Options" 
-                    Content="+ places"
+            
+            <Button Name="Options"
+                    Grid.Column="0"
+                    Content="+ options"
                     Click="Button_Click_1"
                     Width="40"
-                    Margin="10,0,0,0">                
+                    Margin="20,0,0,0">
                 <!--<Button.Template>
                     <ControlTemplate>
                         <Grid Width="45"
-                                Height="45">
+                              Height="45"
+                              Background="#006699"
+                              Name="ColorBox">
                             <Image Source="/Assets/hmburg.png"
-                                   Stretch="Fill"/>
+                                Stretch="Fill"/>
                         </Grid>
                     </ControlTemplate>
                 </Button.Template>-->
             </Button>
+                
+           
+            
             <!--<Grid Background="#006699"
                   Width="50"
                   Height="50"
@@ -95,57 +102,69 @@
         
         
         
-        <Grid Margin="20,90,20,0">
+        <Grid Margin="20,90,20,0"
+              Visibility="Collapsed"
+              Name="OptionsPanel">
             <StackPanel>
+
+                <ComboBox SelectionChanged="ComboBox_SelectionChanged_1"
+                      Header="Results Per City"
+                      Margin="15,0,15,10">
+                    <ComboBoxItem Content="3"/>
+                    <ComboBoxItem Content="5"/>
+                    <ComboBoxItem Content="10"/>
+                    <ComboBoxItem Content="15"/>
+                    <ComboBoxItem Content="20"/>
+                </ComboBox>
                 <ComboBox Tag="1" SelectionChanged="ComboBox_SelectionChanged"
                       Header="City 1"
-                      Margin="15,0,15,20">
-                    <ComboBoxItem Content="Delhi" Tag="27"/>
-                    <ComboBoxItem Content="Chennai" Tag="25"/>
-                    <ComboBoxItem Content="Bangalore" Tag="23"/>
-                    <ComboBoxItem Content="Kolkata" Tag="30"/>
-                    <ComboBoxItem Content="Mumbai" Tag="31"/>
-                    <ComboBoxItem Content="None" Tag="0"/>
+                      Margin="15,0,15,10">
+                    <ComboBoxItem Content="None"/>
+                    <ComboBoxItem Content="Delhi" Tag="28.666667 77.216667"/>
+                    <ComboBoxItem Content="Chennai" Tag="13.090994	80.224998"/>
+                    <ComboBoxItem Content="Bangalore" Tag="12.983333 77.583333"/>
+                    <ComboBoxItem Content="Kolkata" Tag="22.569722 88.369722"/>
+                    <ComboBoxItem Content="Mumbai" Tag="18.975000 72.825833"/>
                 </ComboBox>
                 <ComboBox Tag="2" SelectionChanged="ComboBox_SelectionChanged"
                       Header="City 2"
-                      Margin="15,0,15,20">
-                    <ComboBoxItem Content="Delhi" Tag="27"/>
-                    <ComboBoxItem Content="Chennai" Tag="25"/>
-                    <ComboBoxItem Content="Bangalore" Tag="23"/>
-                    <ComboBoxItem Content="Kolkata" Tag="30"/>
-                    <ComboBoxItem Content="Mumbai" Tag="31"/>
-                    <ComboBoxItem Content="None" Tag="0"/>
+                      Margin="15,0,15,10">
+                    <ComboBoxItem Content="None"/>
+                    <ComboBoxItem Content="Delhi" Tag="28.666667 77.216667"/>
+                    <ComboBoxItem Content="Chennai" Tag="13.090994	80.224998"/>
+                    <ComboBoxItem Content="Bangalore" Tag="12.983333 77.583333"/>
+                    <ComboBoxItem Content="Kolkata" Tag="22.569722 88.369722"/>
+                    <ComboBoxItem Content="Mumbai" Tag="18.975000 72.825833"/>
                 </ComboBox>
                 <ComboBox Tag="3" SelectionChanged="ComboBox_SelectionChanged"
                       Header="City 3"
-                      Margin="15,0,15,20">
-                    <ComboBoxItem Content="Delhi" Tag="27"/>
-                    <ComboBoxItem Content="Chennai" Tag="25"/>
-                    <ComboBoxItem Content="Bangalore" Tag="23"/>
-                    <ComboBoxItem Content="Kolkata" Tag="30"/>
-                    <ComboBoxItem Content="Mumbai" Tag="31"/>
-                    <ComboBoxItem Content="None" Tag="0"/>
+                      Margin="15,0,15,10">
+                    <ComboBoxItem Content="None"/>
+                    <ComboBoxItem Content="Delhi" Tag="28.666667 77.216667"/>
+                    <ComboBoxItem Content="Chennai" Tag="13.090994	80.224998"/>
+                    <ComboBoxItem Content="Bangalore" Tag="12.983333 77.583333"/>
+                    <ComboBoxItem Content="Kolkata" Tag="22.569722 88.369722"/>
+                    <ComboBoxItem Content="Mumbai" Tag="18.975000 72.825833"/>
                 </ComboBox>
                 <ComboBox Tag="4" SelectionChanged="ComboBox_SelectionChanged"
                       Header="City 4"
-                      Margin="15,0,15,20">
-                    <ComboBoxItem Content="Delhi" Tag="27"/>
-                    <ComboBoxItem Content="Chennai" Tag="25"/>
-                    <ComboBoxItem Content="Bangalore" Tag="23"/>
-                    <ComboBoxItem Content="Kolkata" Tag="30"/>
-                    <ComboBoxItem Content="Mumbai" Tag="31"/>
-                    <ComboBoxItem Content="None" Tag="0"/>
+                      Margin="15,0,15,10">
+                    <ComboBoxItem Content="None"/>
+                    <ComboBoxItem Content="Delhi" Tag="28.666667 77.216667"/>
+                    <ComboBoxItem Content="Chennai" Tag="13.090994	80.224998"/>
+                    <ComboBoxItem Content="Bangalore" Tag="12.983333 77.583333"/>
+                    <ComboBoxItem Content="Kolkata" Tag="22.569722 88.369722"/>
+                    <ComboBoxItem Content="Mumbai" Tag="18.975000 72.825833"/>
                 </ComboBox>
                 <ComboBox Tag="5" SelectionChanged="ComboBox_SelectionChanged"
                       Header="City 5"
-                      Margin="15,0,15,20">
-                    <ComboBoxItem Content="Delhi" Tag="27"/>
-                    <ComboBoxItem Content="Chennai" Tag="25"/>
-                    <ComboBoxItem Content="Bangalore" Tag="23"/>
-                    <ComboBoxItem Content="Kolkata" Tag="30"/>
-                    <ComboBoxItem Content="Mumbai" Tag="31"/>
-                    <ComboBoxItem Content="None" Tag="0"/>
+                      Margin="15,0,15,10">
+                    <ComboBoxItem Content="None"/>
+                    <ComboBoxItem Content="Delhi" Tag="28.666667 77.216667"/>
+                    <ComboBoxItem Content="Chennai" Tag="13.090994	80.224998"/>
+                    <ComboBoxItem Content="Bangalore" Tag="12.983333 77.583333"/>
+                    <ComboBoxItem Content="Kolkata" Tag="22.569722 88.369722"/>
+                    <ComboBoxItem Content="Mumbai" Tag="18.975000 72.825833"/>
                 </ComboBox>
             </StackPanel>            
         </Grid>

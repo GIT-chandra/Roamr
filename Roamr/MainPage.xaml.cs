@@ -28,7 +28,8 @@ namespace Roamr
     public class city_data
     {
         public int serial { get; set; }
-        public string cityId { get; set; }
+        public string cityId_lat { get; set; }
+        public string cityId_long { get; set; }
         public AdByLocation ads { get; set; }
     }
     public class cities
@@ -44,17 +45,18 @@ namespace Roamr
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        AdByLocation test1 = new AdByLocation();
+        AdByLocation allData = new AdByLocation();
+        int resPerPage = 0;
         cities my_list = new cities();
         
         public MainPage()
         {
             this.InitializeComponent();
-            my_list.Items.Add(new city_data() { serial = 1, cityId = "0", ads = new AdByLocation() });
-            my_list.Items.Add(new city_data() { serial = 1, cityId = "0", ads = new AdByLocation() });
-            my_list.Items.Add(new city_data() { serial = 1, cityId = "0", ads = new AdByLocation() });
-            my_list.Items.Add(new city_data() { serial = 1, cityId = "0", ads = new AdByLocation() });
-            my_list.Items.Add(new city_data() { serial = 1, cityId = "0", ads = new AdByLocation() });
+            my_list.Items.Add(new city_data() { serial = 0, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
+            my_list.Items.Add(new city_data() { serial = 1, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
+            my_list.Items.Add(new city_data() { serial = 2, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
+            my_list.Items.Add(new city_data() { serial = 3, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
+            my_list.Items.Add(new city_data() { serial = 4, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
@@ -69,6 +71,7 @@ namespace Roamr
             // TODO: Prepare page for display here.
 
             
+
             //getToken();
 
             // TODO: If your application contains multiple pages, ensure that you are
@@ -80,32 +83,38 @@ namespace Roamr
 
         async private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string QuikrApiUri = "https://api.quikr.com/public/adsByLocation?lat=28.64649963&lon=77.22570038&from=0&size=20";
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(QuikrApiUri);
-            //request.Method = "GET";
-            //request.ContentType = "application/json";
-            request.Headers["X-Quikr-App-Id"] = "533";
-            request.Headers["X-Quikr-Token-Id"] = "3033368";
-            request.Headers["X-Quikr-Signature"] = "4f5c4fdc1704d6f1aee5e67eeee08ac26e17eabf";
-            Task<WebResponse> tres = request.GetResponseAsync();
+            OptionsPanel.Visibility = Visibility.Collapsed;
+            Display.Visibility = Visibility.Collapsed;
 
-            Butn1.Content = "Retrieving Data..";
-            Butn1.IsEnabled = false;
-            Options.IsEnabled = false; 
+            allData.AdsByLocationResponse = new AdsByLocationResponse();
+            allData.AdsByLocationResponse.AdsByLocationData = new AdsByLocationData();
+            allData.AdsByLocationResponse.AdsByLocationData.docs = new List<Doc>();
 
-            WebResponse res = await tres;
-            Stream ReceiveStream = res.GetResponseStream();
-            Encoding encode = Encoding.GetEncoding("utf-8");
-            StreamReader readStream = new StreamReader(ReceiveStream, encode);
-            string data = readStream.ReadToEnd();
-            test1 = JsonConvert.DeserializeObject<AdByLocation>(data);
-            
-            Butn1.Content = "Shop around";
-            Butn1.IsEnabled = true;
-            Options.IsEnabled = true;
+            int flag = 0;
+            if (resPerPage != 0)
+                foreach (city_data cd in my_list.Items)
+                    if(cd.cityId_lat != null && cd.cityId_long != null)
+                    {
+                        await fetchQuikly(cd.cityId_lat, cd.cityId_long, cd.serial);
+                        flag = 1;
+                    }
+             
+            if (flag==0)
+            {
+                MessageDialog msgbox = new MessageDialog("Please select cities and no. of results");
+                await msgbox.ShowAsync();
+                return;
+            }
 
-            Display.DataContext = test1.AdsByLocationResponse.AdsByLocationData;
 
+
+            for (int i = 0; i < resPerPage; i++)
+                foreach (city_data cd in my_list.Items)
+                    if (cd.ads.AdsByLocationResponse != null)
+                        allData.AdsByLocationResponse.AdsByLocationData.docs.Add(cd.ads.AdsByLocationResponse.AdsByLocationData.docs.ElementAt(i));
+            Display.DataContext = allData.AdsByLocationResponse.AdsByLocationData;
+
+            Display.Visibility = Visibility.Visible;
             //await waitToLoad();
             //string QuikrApiUri = "https://api.quikr.com/public/adsByLocation?lat=28.64649963&lon=77.22570038&from=0&size=1";
             //HttpWebRequest request =  (HttpWebRequest)HttpWebRequest.Create(QuikrApiUri);
@@ -120,9 +129,53 @@ namespace Roamr
             //Butn1.Content = "Data Received";
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        async private Task fetchQuikly(string lati,string longi,int serial)
         {
 
+            //string QuikrApiUri = string.Format("https://api.quikr.com/public/adsByCategory?categoryId={0}&city={1}&from=0&size={2}", catID, cityId, resPerPage);
+            string QuikrApiUri = string.Format("https://api.quikr.com/public/adsByLocation?lat={0}&lon={1}&from=0&size={2}",lati,longi,resPerPage);
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(QuikrApiUri);
+            //request.Method = "GET";
+            //request.ContentType = "application/json";
+            request.Headers["X-Quikr-App-Id"] = "533";
+            request.Headers["X-Quikr-Token-Id"] = "3033368";
+            request.Headers["X-Quikr-Signature"] = "4f5c4fdc1704d6f1aee5e67eeee08ac26e17eabf";
+            Task<WebResponse> tres = request.GetResponseAsync();
+
+            Butn1.Content = "Retrieving Data..";
+            Butn1.IsEnabled = false;
+            Options.IsEnabled = false;
+            
+
+            WebResponse res = await tres;
+            Stream ReceiveStream = res.GetResponseStream();
+            Encoding encode = Encoding.GetEncoding("utf-8");
+            StreamReader readStream = new StreamReader(ReceiveStream, encode);
+            string data = readStream.ReadToEnd();
+
+            AdByLocation test1 = new AdByLocation();
+            test1 = JsonConvert.DeserializeObject<AdByLocation>(data);
+            my_list.Items.ElementAt(serial).ads = test1;
+
+            Butn1.Content = "Shop around";
+            Butn1.IsEnabled = true;
+            Options.IsEnabled = true;
+
+            
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if(OptionsPanel.Visibility == Visibility.Collapsed)
+            {
+                OptionsPanel.Visibility = Visibility.Visible;
+                Display.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                OptionsPanel.Visibility = Visibility.Collapsed;
+                Display.Visibility = Visibility.Visible;
+            }
         }
         
 
@@ -132,11 +185,28 @@ namespace Roamr
             await Windows.System.Launcher.LaunchUriAsync(new Uri(sp.Tag.ToString(), UriKind.Absolute));
         }
 
-        async private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*async*/ private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            ComboBox cbb = (ComboBox)sender;
+            if(((ComboBoxItem)cbb.SelectedItem).Tag == null)
+            {
+                my_list.Items.ElementAt(int.Parse(cbb.Tag.ToString()) - 1).cityId_lat = null;
+                my_list.Items.ElementAt(int.Parse(cbb.Tag.ToString()) - 1).cityId_long = null;
+            }
+            else
+            {
+                my_list.Items.ElementAt(int.Parse(cbb.Tag.ToString()) - 1).cityId_lat = ((ComboBoxItem)cbb.SelectedItem).Tag.ToString().Remove(8, 10);
+                my_list.Items.ElementAt(int.Parse(cbb.Tag.ToString()) - 1).cityId_long = ((ComboBoxItem)cbb.SelectedItem).Tag.ToString().Remove(0, 10);
+            }
+            
             //MessageDialog msgbox = new MessageDialog(((ComboBox)sender).Tag.ToString());            
             //await msgbox.ShowAsync();
+        }
+
+        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cbb = (ComboBox)sender;
+            resPerPage = int.Parse(((ComboBoxItem)cbb.SelectedItem).Content.ToString());
         }
 
         //async private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
