@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Text;
 using Windows.UI.Popups;
+using Windows.Devices.Geolocation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -46,11 +47,13 @@ namespace Roamr
     public sealed partial class MainPage : Page
     {
         AdByLocation allData = new AdByLocation();
+        AdByLocation local_ad = new AdByLocation();
         int resPerPage = 0;
         cities my_list = new cities();
-        
+
         public MainPage()
         {
+            
             this.InitializeComponent();
             my_list.Items.Add(new city_data() { serial = 0, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
             my_list.Items.Add(new city_data() { serial = 1, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
@@ -59,6 +62,20 @@ namespace Roamr
             my_list.Items.Add(new city_data() { serial = 4, cityId_lat = null, cityId_long = null, ads = new AdByLocation() });
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
+        }
+
+        public static void AddNewAppBarinPage(Page myPage)
+        {
+            CommandBar cbar = new CommandBar { ClosedDisplayMode = AppBarClosedDisplayMode.Compact };
+            AppBarButton appBarButton = new AppBarButton { Label = "Follow" };
+            appBarButton.Click += AppBarButton_Click;
+            cbar.PrimaryCommands.Add(appBarButton);
+            myPage.BottomAppBar = cbar;
+        }
+
+        private static void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
 
         /// <summary>
@@ -70,7 +87,8 @@ namespace Roamr
         {
             // TODO: Prepare page for display here.
 
-            
+            AddNewAppBarinPage(this);
+            this.BottomAppBar.Visibility = Visibility.Collapsed;
 
             //getToken();
 
@@ -83,6 +101,8 @@ namespace Roamr
 
         async private void Button_Click(object sender, RoutedEventArgs e)
         {
+
+            this.BottomAppBar.Visibility = Visibility.Collapsed;
             OptionsPanel.Visibility = Visibility.Collapsed;
             Display.Visibility = Visibility.Collapsed;
 
@@ -95,7 +115,8 @@ namespace Roamr
                 foreach (city_data cd in my_list.Items)
                     if(cd.cityId_lat != null && cd.cityId_long != null)
                     {
-                        await fetchQuikly(cd.cityId_lat, cd.cityId_long, cd.serial);
+                        AdByLocation abl = await fetchQuikly(cd.cityId_lat, cd.cityId_long);
+                        my_list.Items.ElementAt(cd.serial).ads = abl;
                         flag = 1;
                     }
              
@@ -127,9 +148,13 @@ namespace Roamr
 
             //await 
             //Butn1.Content = "Data Received";
+
+            
+
+
         }
 
-        async private Task fetchQuikly(string lati,string longi,int serial)
+        async private Task<AdByLocation> fetchQuikly(string lati,string longi)
         {
 
             //string QuikrApiUri = string.Format("https://api.quikr.com/public/adsByCategory?categoryId={0}&city={1}&from=0&size={2}", catID, cityId, resPerPage);
@@ -142,9 +167,8 @@ namespace Roamr
             request.Headers["X-Quikr-Signature"] = "4f5c4fdc1704d6f1aee5e67eeee08ac26e17eabf";
             Task<WebResponse> tres = request.GetResponseAsync();
 
-            Butn1.Content = "Retrieving Data..";
-            Butn1.IsEnabled = false;
-            Options.IsEnabled = false;
+            Update_Visuals("Retrieving Data..", false);
+           
             
 
             WebResponse res = await tres;
@@ -155,18 +179,31 @@ namespace Roamr
 
             AdByLocation test1 = new AdByLocation();
             test1 = JsonConvert.DeserializeObject<AdByLocation>(data);
-            my_list.Items.ElementAt(serial).ads = test1;
 
-            Butn1.Content = "Shop around";
-            Butn1.IsEnabled = true;
-            Options.IsEnabled = true;
 
-            
+            Update_Visuals("Roam", true);
+            return test1;
+
+
+        }
+
+        private void Update_Visuals(string v1, bool v2)
+        {
+            if (v2 == false)
+                Butn1.BorderThickness = new Thickness(0);
+            else
+                Butn1.BorderThickness = new Thickness(2.5);
+            Butn1.Content = v1;
+            Butn1.IsEnabled = v2;
+            Options.IsEnabled = v2;
+            Here.IsEnabled = v2;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if(OptionsPanel.Visibility == Visibility.Collapsed)
+
+            this.BottomAppBar.Visibility = Visibility.Collapsed;
+            if (OptionsPanel.Visibility == Visibility.Collapsed)
             {
                 OptionsPanel.Visibility = Visibility.Visible;
                 Display.Visibility = Visibility.Collapsed;
@@ -207,6 +244,34 @@ namespace Roamr
         {
             ComboBox cbb = (ComboBox)sender;
             resPerPage = int.Parse(((ComboBoxItem)cbb.SelectedItem).Content.ToString());
+        }
+
+        async private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if(resPerPage == 0)
+            {
+                MessageDialog msgbox = new MessageDialog("Please select no. of results");
+                await msgbox.ShowAsync();
+            }
+            else
+            {
+                Geolocator locate = new Geolocator();
+                Update_Visuals("Getting Location", false);
+                OptionsPanel.Visibility = Visibility.Collapsed;
+                Display.Visibility = Visibility.Collapsed;
+                Geoposition geopos = await locate.GetGeopositionAsync();
+                
+
+                local_ad = await fetchQuikly(geopos.Coordinate.Latitude.ToString(), geopos.Coordinate.Longitude.ToString());
+
+                Display.Visibility = Visibility.Visible;
+                Display.DataContext = local_ad.AdsByLocationResponse.AdsByLocationData;
+                Update_Visuals("Roam", true);
+            }
+
+
+            this.BottomAppBar.Visibility = Visibility.Visible;
+
         }
 
         //async private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
