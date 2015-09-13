@@ -32,7 +32,7 @@ namespace Roamr
         public string content { get; set; }
         public string ad_quality_score { get; set; }
         public string order_packid { get; set; }
-        public List<string> images { get; set; }
+        public object images { get; set; }
         public string order_orderId { get; set; }
         public string cas { get; set; }
         public string order_remark { get; set; }
@@ -49,6 +49,7 @@ namespace Roamr
         public string stateName { get; set; }
         public long attribute_last_online { get; set; }
         public int ad_view_count { get; set; }
+        public string url { get; set; }
     }
 
     public class AdsByLocationData

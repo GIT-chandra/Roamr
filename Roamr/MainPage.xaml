@@ -7,23 +7,168 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+   
 
     <Grid>
+       
+        <ListView ItemsSource="{Binding docs}"
+                  Name="Display"
+                  Margin="20,90,20,0"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Rectangle Fill="#7ac143"
+                                   Height="2"
+                                   Width="auto"
+                                   Opacity="0.8"
+                                   VerticalAlignment="Bottom"/>
+                        <StackPanel Margin="5,5,15,5">
+                            <TextBlock Text="{Binding title}"
+                                       Width="440"
+                                   FontSize="20"
+                                   Foreground="#006699"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="City :"
+                                           Foreground="LightGray"
+                                       FontSize="19"/>
+                                <TextBlock Text="{Binding cityName}"
+                                       FontSize="19"
+                                           Margin="5,0,0,0"/>
+                                <TextBlock Text="Price :"
+                                           Foreground="LightGray"
+                                       FontSize="19"
+                                       HorizontalAlignment="Right"
+                                       Margin="40,0,5,0"/>                                
+                                <TextBlock Text="{Binding attribute_Price}"
+                                       FontSize="19"
+                                       HorizontalAlignment="Right"/>
+                                
+                            </StackPanel>                           
+
+                        </StackPanel>
+
+                        <TextBlock Tag="{Binding url}"
+                                   Tapped="TextBlock_Tapped"/>
+
+                    </Grid>
+                    
+                    
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+
         <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top"
-                    Margin="0,40,0,0"
+                    Margin="0,20,0,0"
                     HorizontalAlignment="Center">
             <Button Content="Shop around"
                     Click="Button_Click"
                     Name="Butn1"/>
-            <Grid Background="#006699"
+            <Button Name="Options" 
+                    Content="+ places"
+                    Click="Button_Click_1"
+                    Width="40"
+                    Margin="10,0,0,0">                
+                <!--<Button.Template>
+                    <ControlTemplate>
+                        <Grid Width="45"
+                                Height="45">
+                            <Image Source="/Assets/hmburg.png"
+                                   Stretch="Fill"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Button.Template>-->
+            </Button>
+            <!--<Grid Background="#006699"
                   Width="50"
                   Height="50"
-                  Margin="20,0,0,0">
-                <Image Source="/Assets/tileImage.png"/>
-            </Grid>
+                  Margin="20,0,0,0"
+                  Name="Options">
+                
+            </Grid>-->
         </StackPanel>
+
+
         
+        
+        
+        <Grid Margin="20,90,20,0">
+            <StackPanel>
+                <ComboBox Tag="1" SelectionChanged="ComboBox_SelectionChanged"
+                      Header="City 1"
+                      Margin="15,0,15,20">
+                    <ComboBoxItem Content="Delhi" Tag="27"/>
+                    <ComboBoxItem Content="Chennai" Tag="25"/>
+                    <ComboBoxItem Content="Bangalore" Tag="23"/>
+                    <ComboBoxItem Content="Kolkata" Tag="30"/>
+                    <ComboBoxItem Content="Mumbai" Tag="31"/>
+                    <ComboBoxItem Content="None" Tag="0"/>
+                </ComboBox>
+                <ComboBox Tag="2" SelectionChanged="ComboBox_SelectionChanged"
+                      Header="City 2"
+                      Margin="15,0,15,20">
+                    <ComboBoxItem Content="Delhi" Tag="27"/>
+                    <ComboBoxItem Content="Chennai" Tag="25"/>
+                    <ComboBoxItem Content="Bangalore" Tag="23"/>
+                    <ComboBoxItem Content="Kolkata" Tag="30"/>
+                    <ComboBoxItem Content="Mumbai" Tag="31"/>
+                    <ComboBoxItem Content="None" Tag="0"/>
+                </ComboBox>
+                <ComboBox Tag="3" SelectionChanged="ComboBox_SelectionChanged"
+                      Header="City 3"
+                      Margin="15,0,15,20">
+                    <ComboBoxItem Content="Delhi" Tag="27"/>
+                    <ComboBoxItem Content="Chennai" Tag="25"/>
+                    <ComboBoxItem Content="Bangalore" Tag="23"/>
+                    <ComboBoxItem Content="Kolkata" Tag="30"/>
+                    <ComboBoxItem Content="Mumbai" Tag="31"/>
+                    <ComboBoxItem Content="None" Tag="0"/>
+                </ComboBox>
+                <ComboBox Tag="4" SelectionChanged="ComboBox_SelectionChanged"
+                      Header="City 4"
+                      Margin="15,0,15,20">
+                    <ComboBoxItem Content="Delhi" Tag="27"/>
+                    <ComboBoxItem Content="Chennai" Tag="25"/>
+                    <ComboBoxItem Content="Bangalore" Tag="23"/>
+                    <ComboBoxItem Content="Kolkata" Tag="30"/>
+                    <ComboBoxItem Content="Mumbai" Tag="31"/>
+                    <ComboBoxItem Content="None" Tag="0"/>
+                </ComboBox>
+                <ComboBox Tag="5" SelectionChanged="ComboBox_SelectionChanged"
+                      Header="City 5"
+                      Margin="15,0,15,20">
+                    <ComboBoxItem Content="Delhi" Tag="27"/>
+                    <ComboBoxItem Content="Chennai" Tag="25"/>
+                    <ComboBoxItem Content="Bangalore" Tag="23"/>
+                    <ComboBoxItem Content="Kolkata" Tag="30"/>
+                    <ComboBoxItem Content="Mumbai" Tag="31"/>
+                    <ComboBoxItem Content="None" Tag="0"/>
+                </ComboBox>
+            </StackPanel>            
+        </Grid>
+        <!--<ListBox ItemsSource="{Binding docs}"
+                    Name="Display"
+                     Grid.Row="1"
+                 ScrollViewer.IsDeferredScrollingEnabled="True">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding title}"/>
+                        <TextBlock Text="{Binding attribute_Price}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding categoryName}"/>
+                            <TextBlock Text="{Binding verified_mobile}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>-->
+
+
+
 
 
 
